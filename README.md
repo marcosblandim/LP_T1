@@ -9,14 +9,22 @@ Dica: utilize as dicas (tips) do site para diminuir a quantidade de tentativas
 Uma matriz indicando cada posição do tabuleiro e seu valor
 ### Saída:
 O tabuleiro completamente preenchido
-### Entrada: [[,0,,,,,,],[,,,1,,1,,0],[,,0,,,,,,,,],[,1,,,,,,],[,0,,,,,,],[,,,1,,1,,0],[,,0,,,,,,,,],[,1,,,,,,]]
+### Entrada: 
+[[,0,,,,,,],[,,,1,,1,,0],[,,0,,,,,,,,],[,1,,,,,,],[,0,,,,,,],[,,,1,,1,,0],[,,0,,,,,,,,],[,1,,,,,,]]
 ### Saída:
 1 0 1 0 1 0 1 0
+
 0 1 0 1 0 1 1 0
+
 1 0 0 1 1 0 0 1
+
 0 1 1 0 0 1 1 0
+
 0 1 0 1 1 0 0 1
+
 1 0 1 0 1 1 0 0
+
 1 0 0 1 0 0 1 1
+
 0 1 1 0 0 1 0 1
 
