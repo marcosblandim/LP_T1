@@ -43,3 +43,9 @@ Each binary puzzle has to be solved according to the following rules:
 Each binary puzzle has a unique solution. It is always possible to make a next step by reasoning. In other words, the solution can always be found without guessing.
 
 Access this site for tips http://www.binarypuzzle.com/tips.php 
+
+## Estratégia adotada para resolver o _puzzle_:
+1. Ler lista com tabuleiro pouco preenchido.
+2. Preencher o tabuleiro o máximo possível utilizando essas dicas: http://www.binarypuzzle.com/tips.php
+3. Com o passo anterior, diminuimos as possíveis soluções do tabuleiro, então podemos resolve-lo utilizando a backtracking em um tempo decente.
+4. Formatar e retonar o tabuleiro resolvido.
