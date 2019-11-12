@@ -47,5 +47,8 @@ Access this site for tips http://www.binarypuzzle.com/tips.php
 ## Estratégia adotada para resolver o _puzzle_:
 1. Ler lista com tabuleiro pouco preenchido.
 2. Preencher o tabuleiro o máximo possível utilizando essas dicas: http://www.binarypuzzle.com/tips.php
+
+Cria uma função pra cada dica e as repete até que não se consiga mais preencher o tabuleiro com elas.
+
 3. Com o passo anterior, diminuimos as possíveis soluções do tabuleiro, então podemos resolve-lo utilizando a backtracking em um tempo decente.
 4. Formatar e retonar o tabuleiro resolvido.
