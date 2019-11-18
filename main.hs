@@ -10,6 +10,8 @@
 
 -}
 
+module Main where
+
 dica1 = tabuleiro
 
 main = do
