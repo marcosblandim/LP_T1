@@ -1,5 +1,8 @@
 --import Control.Lens
 import Data.List
+import Data.List (transpose)
+import Data.List (intercalate)
+
 
 -- Substitiu um valor escolhido em um indice escolhido e retorna a lista modificada
 replace' :: Int -> Int -> [Int] -> [Int]
@@ -56,19 +59,77 @@ triosEmLista (x:xs) = if length xs >= 2 then
 
 -- Faz todas as validacoes
 valida :: [[Int]] -> [Int] -> Int -> Bool
-valida x y k = validaLinha y && comparaLinhas x y && triosEmLista y && validaLinha ((transpose x)!!k) && comparaLinhas (transpose x) ((transpose x)!!k) && triosEmLista ((transpose x)!!k)
+valida x y k = (validaLinha y && comparaLinhas x y && triosEmLista y)
+-- Falta validar as colunas
+--valida x y k = (validaLinha y && comparaLinhas x y && triosEmLista y && validaLinha ((transpose x)!!k) && comparaLinhas (transpose x) ((transpose x)!!k) && triosEmLista ((transpose x)!!k))
+
+-- Roda as dicas em uma matriz o numero de vezes indicado
+aplicaDicas :: [[Int]] -> Int -> [[Int]]
+aplicaDicas x 0  = x
+aplicaDicas x n = aplicaDicas (dicas(transpose(transpose(transpose(dicas (transpose x)))))) (n-1)
+
+-- Percorre uma lista de listas e aplica uma regra a ela
+dicas :: [[Int]] -> [[Int]]
+dicas [] = []
+dicas (x:xs) = ((seguidosLinhas (sanduicheLinhas x)) : dicas xs)
+
+------------------------------------------------------------ Printar formatado 
+-- print  = putStrLn $ showMat
+showMat = unTable " " . equalizeCellLengths . (map . map) show
+
+main = putStrLn $ showMat [[1,23,456],[78,-90,123],[4567,8,9]]
+
+-- | Un-tabs, and intersperses the result with \\n. This converts a 2-dimensional
+--   list of strings into a string where ends of a line are \\n, and the
+--   individual cells are divided by \\t.
+unTable :: String     -- ^ Column spacer
+        -> [[String]] -- ^ Table
+        -> String
+unTable colSpacer = intercalate "\n" . map (intercalate colSpacer)
+
+-- | Finds the length of the longest line of a table
+maxLineLength :: [[a]] -> Int
+maxLineLength = maximum . map length
+
+-- | Calculates the length of the longest entry of each column.
+maxCellLengthsPerColumn :: [[[a]]] -> [Int]
+maxCellLengthsPerColumn = map maxLineLength . transpose
+
+-- | Reformats the table.
+equalizeCellLengths :: [[String]] -> [[String]]
+equalizeCellLengths table = map (equalize maxLengths) table
+    where
+        maxLengths = maxCellLengthsPerColumn table
+
+        -- equalize takes a list of lengths and a 2-dimensional table, and
+        -- pads the columns so all entries have the same length.
+        equalize = flip $ zipWith (padToLengthLeft ' ')
+
+-- | Pads a list to a certain length on the right.
+--
+--   >>> padToLengthRight '.' "abc" 5
+--   "abc.."
+padToLengthLeft :: a   -- ^ Padding element
+                -> [a] -- ^ List to be padded
+                -> Int -- ^ Length to pad to
+                -> [a]
+padToLengthLeft padding list n = (replicate (n - length list) padding) ++ list
+------------------------------------------------------------------------------
 
 -- Backtrack por linha do tabuleiro:
 -- Recebe matriz, linha, indice do termo na linha e retorna linha preenchida
-backtrackLinha :: [[Int]] -> [Int] -> Int -> [Int]
-backtrackLinha _ _ 8 = []
-backtrackLinha y (x:xs) k = [m:ms | m <- [0,1]
-                                , ms <- backtrackLinha y (x:xs) (k+1)
-                                , valida y (m:ms) k || (x /= -1 && m == x)]
 
--- Bruteforce
-backtrack :: [[Int]] -> [[Int]]
-backtrack (x:xs) = [[]]
+-- backtrackLinha :: [[Int]] -> [Int] -> Int -> [[Int]]
+-- backtrackLinha _ _ 8 = [[]]
+-- backtrackLinha y (x:xs) k = [m:ms | m <- [0,1]
+--                                 , ms <- backtrackLinha y (x:xs) (k+1)
+--                                 , valida y (m:ms) k || (x /= -1 && m == x)]
+
+-- backtrackLinha y (x:xs) k = if valida
+
+-- -- Bruteforce
+-- backtrack :: [[Int]] -> [[Int]]
+-- backtrack (x:xs) = [[]]
 
 
 -- Funcao final: resolve o tabuleiro
@@ -76,5 +137,31 @@ backtrack (x:xs) = [[]]
 -- resolvePuzzle
 
 -- Teste
--- [[-1,0,-1,-1,-1,-1,-1,-1],[-1,-1,-1,1-1,-1,1-1,-1,0],[-1,-1,0,-1,-1,-1,-1,-1,-1,-1],[-1,1-1,-1,-1,-1,-1,-1],[-1,0,-1,-1,-1,-1,-1],[-1,-1,-1,1-1,-1,1-1,-1,0],[-1,-1,0,-1,-1,-1,-1,-1,-1,-1],[-1,1-1,-1,-1,-1,-1,-1]]
+-- [[-1,0,-1,-1,-1,-1,-1,-1]
+-- [[-1,-1,-1,1-1,-1,1-1,-1,0],[-1,-1,0,-1,-1,-1,-1,-1],[-1,1-1,-1,-1,-1,-1,-1],[-1,0,-1,-1,-1,-1,-1],[-1,-1,-1,1-1,-1,1-1,-1,0],[-1,-1,0,-1,-1,-1,-1,-1,-1,-1],[-1,1-1,-1,-1,-1,-1,-1]] [-1,-1,-1,1-1,-1,1-1,-1,0] 1
 -- backtrackLinha [[-1,0,-1,-1,-1,-1,-1,-1],[-1,-1,-1,1,-1,1,-1,0],[-1,-1,0,-1,-1,-1,-1,-1],[-1,1,-1,-1,-1,-1,-1,-1],[-1,0,-1,-1,-1,-1,-1,-1],[-1,-1,-1,1,-1,1,-1,0],[-1,-1,0,-1,-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1,-1]] [-1,0,-1,-1,-1,-1,-1,-1] 1
+
+-- [  ,  ,  ,  , 1,  ,  , 1]
+-- [  ,  , 1,  , 1,  ,  ,  ]
+-- [ 1,  , 1,  ,  , 1,  ,  ]
+-- [  ,  ,  , 1,  ,  , 1, 0]
+-- [ 1, 0,  ,  ,  ,  ,  , 1]
+-- [  , 0,  ,  ,  ,  , 0,  ]
+-- [  ,  , 0, 0,  ,  ,  , 0]
+-- [  ,  ,  ,  , 0,  , 0,  ] 
+
+-- [  ,  ,  ,  , 1,  ,  , 1] 1
+
+-- valida [[-1,-1,-1,-1, 1,-1,-1, 1],[-1,-1, 1,-1, 1,-1,-1,-1],[ 1,-1, 1,-1,-1, 1,-1,-1],[-1,-1,-1, 1,-1,-1, 1, 0],[ 1, 0,-1,-1,-1,-1,-1, 1],[-1, 0,-1,-1,-1,-1, 0,-1],[-1,-1, 0, 0,-1,-1,-1, 0],[-1,-1,-1,-1, 0,-1, 0,-1]] [-1,-1,-1,-1, 1,-1,-1, 1] 1
+
+-- aplicaDicas [[-1,-1,-1,-1, 1,-1,-1, 1],[-1,-1, 1,-1, 1,-1,-1,-1],[ 1,-1, 1,-1,-1, 1,-1,-1],[-1,-1,-1, 1,-1,-1, 1, 0],[ 1, 0,-1,-1,-1,-1,-1, 1],[-1, 0,-1,-1,-1,-1, 0,-1],[-1,-1, 0, 0,-1,-1,-1, 0],[-1,-1,-1,-1, 0,-1, 0,-1]] 1000
+-- putStrLn $ showMat $[[-1,-1,0,-1,1,-1,-1,1],[-1,-1,1,0,1,-1,-1,-1],[1,0,1,-1,0,1,-1,-1],[0,1,0,1,-1,-1,1,0],[1,0,-1,-1,-1,-1,-1,1],[-1,0,-1,-1,-1,-1,0,-1],[-1,1,0,0,1,0,1,0],[-1,-1,-1,-1,0,1,0,-1]]
+
+[            1        1]       [      0     1        1]
+[      1     1         ]       [      1  0  1         ]
+[1     1        1      ]       [1  0  1     0  1      ]
+[         1        1  0]  ->   [0  1  0  1        1  0]
+[1  0                 1]  ->   [1  0                 1]
+[   0              0   ]       [   0              0   ]
+[      0  0           0]       [   1  0  0  1  0  1  0]
+[            0     0   ]       [            0  1  0   ]
