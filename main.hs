@@ -46,13 +46,26 @@ validaLinha :: [Int] -> Bool
 validaLinha x = conta x 1 <= 4 && conta x 0 <= 4  
 -- Procura por linhas iguais
 comparaLinhas :: [[Int]] -> [Int] -> Bool
-comparaLinhas x y = any (y==) (x)
+comparaLinhas x y = not(any (y==) (x))
 -- Procura por trios
 triosEmLista :: [Int] -> Bool
 triosEmLista (x:xs) = if length xs >= 2 then
                         if x /= -1 && x == xs!!0 && x == xs!!1 then False
                         else triosEmLista xs
                     else True
+
+-- Faz todas as validacoes
+valida :: [[Int]] -> [Int] -> Int -> Bool
+valida x y k = validaLinha y && comparaLinhas x y && triosEmLista y && validaLinha ((transpose x)!!k) && comparaLinhas (transpose x) ((transpose x)!!k) && triosEmLista ((transpose x)!!k)
+
+-- Backtrack por linha do tabuleiro:
+-- Recebe matriz, linha, indice do termo na linha e retorna linha preenchida
+backtrackLinha :: [[Int]] -> [Int] -> Int -> [Int]
+backtrackLinha _ _ 8 = []
+backtrackLinha y (x:xs) k = [m:ms | m <- [0,1]
+                                , ms <- backtrackLinha y (x:xs) (k+1)
+                                , valida y (m:ms) k || (x /= -1 && m == x)]
+
 -- Bruteforce
 backtrack :: [[Int]] -> [[Int]]
 backtrack (x:xs) = [[]]
