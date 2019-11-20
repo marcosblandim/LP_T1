@@ -15,12 +15,12 @@ seguidosLinhas (x:xs) =   if length (x:xs) > 2  then
                             if x == 1 && xs!!0 == 1 then x : seguidosLinhas (replace' 1 0 xs)
                             else if x == 0 && xs!!0 == 0 then x : seguidosLinhas (replace' 1 1 xs)
                             else if ((x == 1 && xs!!0 == 0) || (x == 0 && xs!!0 == 1)) then x : seguidosLinhas (xs)
-                            else if ((x == -1  && xs!!0 == 0 && xs!!1 == 1) || (x == 0  && xs!!0 == -1) || (x == -1  && xs!!0 == 1 && xs!!1 == 0) || (x == 1  && xs!!0 == -1) || (x == -1  && xs!!0 == -1)) then x : seguidosLinhas (xs)
+                            else if ((x == -1  && xs!!0 == 0 && xs!!1 == 1) || (x == 0  && xs!!0 == -1) || (x == -1  && xs!!0 == 1 && xs!!1 == -1) || (x == -1  && xs!!0 == 1 && xs!!1 == 0) || (x == 1  && xs!!0 == -1) || (x == -1  && xs!!0 == -1)) then x : seguidosLinhas (xs)
                             else if ((x == -1 && xs!!0 == 0 && xs!!1 == 0)) then 1 : seguidosLinhas(xs)
                             else if ((x == -1 && xs!!0 == 1 && xs!!1 == 1)) then 0 : seguidosLinhas(xs)
-                            else []
+                            else (x:xs)
                         else (x:xs)
-
+                        
 -- Aplica as dicas de 0_0 = 010, 1_1 = 101
 sanduicheLinhas :: [Int] -> [Int]
 sanduicheLinhas [] = []
